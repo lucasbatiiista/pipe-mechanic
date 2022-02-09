@@ -1,0 +1,19 @@
+@import './../../styles/_colors.less';
+
+.popup{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  animation: fade 3s forwards ease-out;
+
+  &-text{
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0.836);
+    border-radius: 10px;
+    padding: 12px;
+    z-index: 3;
+    text-align: center;
+    white-space: nowrap;
+  }
+}

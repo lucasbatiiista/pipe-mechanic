@@ -1,0 +1,63 @@
+@keyframes container-fly-in {
+  0% {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 25%;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes flash{
+  25%{ background-color: @primaryColors[light] }
+  50%{ background-color: inherit }
+  75%{ background-color: @primaryColors[light] }
+  100%{ background-color: inherit }
+}
+
+@keyframes appear{
+  0%{ opacity: 0; }
+  100%{ opacity: 1; }
+}
+
+@keyframes fade{
+  0%{ opacity: 1; }
+  99%{ opacity: 0; }
+  100% { 
+    opacity: 0; 
+    visibility: hidden;
+  }
+}
+
+@keyframes focus {
+  50%{ border-radius: 25%; }
+  100%{
+    transform: scale(1.2, 1.2);
+    border-radius: 25%;
+  }
+}
+
+@keyframes rotate-90{
+  0%  { transform: rotateZ(0deg); }
+  100%{ transform: rotateZ(90deg); }
+}
+
+@keyframes rotate-180{
+  0%  { transform: rotateZ(90deg); }
+  100%{ transform: rotateZ(180deg); }
+}
+
+@keyframes rotate-270{
+  0%  { transform: rotateZ(180deg); }
+  100%{ transform: rotateZ(270deg); }
+}
+
+@keyframes rotate-360{
+  0%  { transform: rotateZ(270deg); }
+  100%{ transform: rotateZ(360deg); }
+}
