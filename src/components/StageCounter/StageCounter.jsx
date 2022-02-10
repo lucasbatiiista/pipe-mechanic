@@ -8,7 +8,7 @@ import './stage-counter.less';
 export default function StageCounter({ stage }) {
 
   return (
-    <div className="hud-stage-counter col-4">
+    <div className="hud-stage-counter">
       Fase: {stage}
     </div>
   )

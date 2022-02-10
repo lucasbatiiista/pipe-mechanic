@@ -9,7 +9,6 @@ import Tile from './../../components/Tile';
 export default function TileMap({
   type,
   tileMapData,
-  onStageComplete,
   onTileClick
 }) {
 
@@ -44,7 +43,7 @@ export default function TileMap({
   }
 
   return (
-    <div className={"tilemap container-fluid " + type}>
+    <div className={"tilemap " + type}>
       {createTiles()}
     </div>
   )

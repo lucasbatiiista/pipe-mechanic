@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
 // CLASSES
 import TimerClock from '../../classes/_timerclock';
@@ -20,17 +20,19 @@ export default function GameUI({
 }) {
 
   // GENERAL
-  const timer = new TimerClock(startTime.min, startTime.sec);
+
+  // REFS
+  const timer = useRef(new TimerClock(startTime.min, startTime.sec)).current;
 
   // STATES
   const [game, setGame] = useState(new Game(6, 3));
   const [turns, setTurns] = useState(0);
   const [stage, setStage] = useState(1);
-  const [type, setType] = useState('game-6by3');
+  const [type, setType] = useState('game-type-easy');
   const [displayTime, setDisplayTime] = useState(timer.getFormattedTime());
   const [gameOver, setGameOver] = useState(false);
   const [currentSolved, setCurrentSolved] = useState(false)
-  const [earnedSeconds, setEarnedSeconds] = useState();
+  const [earnedSeconds, setEarnedSeconds] = useState(-1);
 
   // FUNCTIONS
   function resetGame() {
@@ -38,7 +40,7 @@ export default function GameUI({
     setGame(new Game(6, 3));
     setTurns(0);
     setStage(1);
-    setType('game-6by3');
+    setType('game-type-easy');
     setGameOver(false);
     setDisplayTime(timer.getFormattedTime());
     setCurrentSolved(false);
@@ -53,7 +55,6 @@ export default function GameUI({
 
     if (game.isSolved && !currentSolved) {
       setCurrentSolved(true);
-      setTimeout(() => onStageComplete(), 500);
     }
   }
 
@@ -66,53 +67,34 @@ export default function GameUI({
     let type;
     let addTime;
 
-    if (stage + 1 > hardAtStage) {
+    // HARD
+    if (stage + 1 >= hardAtStage) {
       nextGame = new Game(12, 7);
-      type = 'game-type-1';
-      addTime = addTimeOnComplete.hard - turns;
+      type = 'game-type-hard';
+      addTime = addTimeOnComplete.hard;
     }
-    else if (stage + 1 > normalAtStage) {
+    // NORMAL
+    else if (stage + 1 >= normalAtStage) {
       nextGame = new Game(9, 5);
-      type = 'game-type-2';
-      addTime = addTimeOnComplete.normal - turns;
+      type = 'game-type-normal';
+      addTime = addTimeOnComplete.normal;
     }
+    // EASY
     else {
       nextGame = new Game(6, 3);
-      type = 'game-type-3';
-      addTime = addTimeOnComplete.easy - turns;
+      type = 'game-type-easy';
+      addTime = addTimeOnComplete.easy;
     }
 
-    if (addTime < 0) {
-      addTime = 0;
-    }
-
-    setType(type);
     timer.addSeconds(addTime);
     setEarnedSeconds(addTime);
+    setType(type);
     setDisplayTime(timer.getFormattedTime());
     setTurns(0);
-    setStage(oldStage => ++oldStage);
+    setStage(stage + 1);
     setGame(nextGame);
+
     setCurrentSolved(false);
-
-    forceAnimationToResetAndPlay();
-  }
-
-  // Workaround to trigger animation of timer and popup
-  function forceAnimationToResetAndPlay() {
-    // Timer
-    const timer = document.getElementById('timer');
-    timer.classList.remove('flash');
-    setTimeout(() => timer.classList.remove('flash'), 100);
-
-    // Popup
-    const popup = document.getElementById('popup');
-    popup.classList.remove('popup');
-    popup.style.display = 'none';
-    setTimeout(() => {
-      popup.classList.add('popup');
-      popup.style.display = 'block';
-    }, 100)
   }
 
   function onTimerTick() {
@@ -122,10 +104,18 @@ export default function GameUI({
 
   // USE EFFECTS
   useEffect(() => {
-    console.debug('displayTime: ', displayTime)
     if (displayTime === '0:00')
       onLose();
-  }, [displayTime])
+
+    if (currentSolved)
+      onStageComplete();
+
+  }, [displayTime, currentSolved])
+
+  useEffect(() => {
+    if (earnedSeconds >= 0)
+      setEarnedSeconds(-1);
+  }, [earnedSeconds])
 
   return (
     <div className='game-ui'>
@@ -144,7 +134,6 @@ export default function GameUI({
       <TileMap
         type={type}
         tileMapData={game.tileMapData}
-        onStageComplete={onStageComplete}
         onTileClick={onTileClick}
       />
     </div>

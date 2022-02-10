@@ -13,14 +13,13 @@ export default function Timer({
 
   // GENERAL
 
-  // USE STATE
-  const [popup, setPopup] = useState();
-
   // REFS
   let onTimerTickInterval = useRef(null);
 
   // USE STATE
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [displayEarnedSeconds, setDisplayEarnedSeconds] = useState();
 
   // FUNCTIONS
   function startTimer() {
@@ -39,9 +38,18 @@ export default function Timer({
   // USE EFFECTS
   useEffect(() => {
     startTimer();
-
     return () => stopTimer();
   }, [])
+
+  useEffect(() => {
+    if (earnedSeconds >= 0) {
+      setIsPopupVisible(true);
+      setDisplayEarnedSeconds(earnedSeconds);
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 1000)
+    }
+  }, [earnedSeconds])
 
   useEffect(() => {
     if (displayTime === '0:00')
@@ -52,22 +60,13 @@ export default function Timer({
 
   }, [displayTime])
 
-  useEffect(() => {
-    // console.debug('earnedSeconds: ', earnedSeconds);
-
-    if (earnedSeconds >= 0) {
-      setPopup(
-        <div id="popup" className="container-fluid popup">
-          <p className="popup-text">Você ganhou {earnedSeconds} sec.</p>
-        </div>
-      )
-    }
-  }, [earnedSeconds])
-
   return (
-    <div className="hud-timer col-4" id="timer">
+    <div className="hud-timer">
       Tempo restante: {displayTime}
-      {popup}
+
+      <div className={`popup ${isPopupVisible ? 'active' : ''}`}>
+        <p className="popup-text">Você ganhou {displayEarnedSeconds} sec.</p>
+      </div>
     </div>
   )
 }

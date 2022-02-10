@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // STYLES
 import './game-over.less';
@@ -8,28 +8,18 @@ export default function GameOver({
   gameOver,
   resetGame
 }) {
-  const [modal, setModal] = useState(null);
-
-  // USE EFFECT
-  useEffect(() => {
-    if (gameOver) {
-      setModal(
-        <>
-          <div className='game-over-overlay'></div>
-          <div className='game-over shadow-lg'>
-            <p className='game-over-header'>Fim do Jogo!</p>
-            <p>Você chegou na fase:</p>
-            <p className='game-over-stage-counter'>{stage}</p>
-            <button className='btn' type='button' onClick={resetGame}>Tentar novamente!</button>
-          </div>
-        </>
-      );
-    } else {
-      setModal(null);
-    }
-  }, [gameOver])
 
   return (
-    modal
+    gameOver && (
+      <>
+        <div className='game-over-overlay'></div>
+        <div className='game-over'>
+          <p className='game-over-header'>Fim do Jogo!</p>
+          <p>Você chegou na fase:</p>
+          <p className='game-over-stage-counter'>{stage}</p>
+          <button className='btn' type='button' onClick={resetGame}>Tentar novamente!</button>
+        </div>
+      </>
+    )
   )
 }

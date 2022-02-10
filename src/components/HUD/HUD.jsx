@@ -17,7 +17,7 @@ export default function HUD({
 }) {
 
   return (
-    <div className="hud container-fluid">
+    <div className="hud">
       <div className="row">
         <TurnCounter turns={turns} />
         <Timer
