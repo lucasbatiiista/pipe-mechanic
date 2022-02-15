@@ -30,47 +30,63 @@ export default function Tile({
   }
 
   function getImgBasedOnType() {
+    let tileSource;
+
     if (data.isLit) {
       switch (data.type) {
         case '-':
-          return "/src/assets/images/Empty_Tile.png";
+          return null;
         case 'S':
-          return "/src/assets/images/Start.png";
+          tileSource = "/src/assets/images/start-tile-active.svg";
+          break;
         case 'E':
-          return "/src/assets/images/End_Lit.png";
+          tileSource = "/src/assets/images/end-tile-active.svg";
+          break;
         case 'X':
-          return "/src/assets/images/X-Tile_Lit.png";
+          tileSource = "/src/assets/images/x-tile-active.svg";
+          break;
         case 'L':
-          return "/src/assets/images/L-Tile_Lit.png";
+          tileSource = "/src/assets/images/l-tile-active.svg";
+          break;
         case 'I':
-          return "/src/assets/images/I-Tile_Lit.png";
+          tileSource = "/src/assets/images/i-tile-active.svg";
+          break;
         case 'T':
-          return "/src/assets/images/T-Tile_Lit.png";
+          tileSource = "/src/assets/images/t-tile-active.svg";
+          break;
       }
     }
     else {
       switch (data.type) {
         case '-':
-          return "/src/assets/images/Empty_Tile.png";
+          return null;
         case 'S':
-          return "/src/assets/images/Start.png";
+          tileSource = "/src/assets/images/start-tile.svg";
+          break;
         case 'E':
-          return "/src/assets/images/End.png";
+          tileSource = "/src/assets/images/end-tile.svg";
+          break;
         case 'X':
-          return "/src/assets/images/X-Tile.png";
+          tileSource = "/src/assets/images/x-tile.svg";
+          break;
         case 'L':
-          return "/src/assets/images/L-Tile.png";
+          tileSource = "/src/assets/images/l-tile.svg";
+          break;
         case 'I':
-          return "/src/assets/images/I-Tile.png";
+          tileSource = "/src/assets/images/i-tile.svg";
+          break;
         case 'T':
-          return "/src/assets/images/T-Tile.png";
+          tileSource = "/src/assets/images/t-tile.svg";
+          break;
       }
     }
+
+    return <img className={"tile-img " + type + " lit-" + data.isLit} onClick={handleClick} alt="Tile" src={tileSource} />
   }
 
   return (
-    <div className={"tile " + applyRotationClass()}>
-      <img className={"tile-img " + type + " lit-" + data.isLit} onClick={handleClick} alt="Tile" src={getImgBasedOnType()} />
+    <div className={`tile ${type} tile-${data.type} ${applyRotationClass()}`}>
+      {getImgBasedOnType()}
     </div>
   )
 }
