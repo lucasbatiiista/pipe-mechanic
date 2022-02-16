@@ -6,9 +6,9 @@ export default class Generator {
     if (width < 3 || height < 2) {
       throw Error(`Invalid values for width = ${width} and height = ${height}`);
     }
-    if ((width % 2) !== 1) {
-      throw Error(`width = ${width} must be odd number!`);
-    }
+    // if ((width % 2) !== 1) {
+    //   throw Error(`width = ${width} must be odd number!`);
+    // }
 
     this.width = width;
     this.height = height + 2;

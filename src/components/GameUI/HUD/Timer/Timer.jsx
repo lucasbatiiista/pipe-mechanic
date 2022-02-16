@@ -7,7 +7,8 @@ import './timer.less';
 
 export default function Timer({
   displayTime,
-  earnedSeconds
+  earnedSeconds,
+  popupDisplayTime
 }) {
 
   // GENERAL
@@ -27,7 +28,7 @@ export default function Timer({
       setDisplayEarnedSeconds(earnedSeconds);
       setTimeout(() => {
         setIsPopupVisible(false);
-      }, 1000)
+      }, popupDisplayTime)
     }
   }, [earnedSeconds])
 
@@ -36,8 +37,8 @@ export default function Timer({
     <div className="hud-timer">
       Tempo restante: {displayTime}
 
-      <div className={`popup ${isPopupVisible ? 'active' : ''}`}>
-        <p className="popup-text">Você ganhou {displayEarnedSeconds} sec.</p>
+      <div className={`popup-timer ${isPopupVisible ? 'active' : ''}`}>
+        <p className="popup-timer-text">Você ganhou {displayEarnedSeconds ? displayEarnedSeconds : '0'} segundos</p>
       </div>
     </div>
   )

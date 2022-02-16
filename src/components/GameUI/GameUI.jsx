@@ -8,19 +8,19 @@ import Game from '../../classes/_game';
 import "./game-ui.less";
 
 // COMPONENTS
-import GameOver from '../GameOver';
-import GameCompleted from '../GameCompleted';
-import HUD from '../HUD';
-import TileMap from '../TileMap';
+import GameOver from './GameOver';
+import GameCompleted from './GameCompleted';
+import HUD from './HUD';
+import TileMap from './TileMap';
 
 export default function GameUI({
-  startTime,
-  addTimeOnComplete,
-  sizesAtDifficulties,
-  rewardsAtDifficulties,
-  normalAtStage,
-  hardAtStage,
-  endAtStage
+  startTime = { min: 1, sec: 0 },
+  addTimeOnComplete = { easy: 15, normal: 25, hard: 35 },
+  sizesAtDifficulties = { easy: [3, 2], normal: [3, 3], hard: [4, 4] },
+  rewardsAtDifficulties = { bronze: [1, 4], silver: [5, 9], gold: [10] }, // bronze (stage 1 until 4) ...
+  normalAtStage = 5,
+  hardAtStage = 7,
+  endAtStage = 10
 }) {
 
   // GENERAL
@@ -86,21 +86,21 @@ export default function GameUI({
 
     if (matchInterval('bronze')) {
       setEarnedReward({
-        title: 'Medalha de Bronze',
+        title: 'Medalha de Bronze 🥉',
         points: 10
       })
     }
 
     if (matchInterval('silver')) {
       setEarnedReward({
-        title: 'Medalha de Prata',
+        title: 'Medalha de Prata 🥈',
         points: 50
       })
     }
 
     if (matchInterval('gold')) {
       setEarnedReward({
-        title: 'Medalha de Ouro',
+        title: 'Medalha de Ouro 🥇',
         points: 100
       })
     }
@@ -186,7 +186,7 @@ export default function GameUI({
   useEffect(() => {
     if (currentSolved) {
       stopTimer();
-      setTimeout(onStageComplete, 800);
+      setTimeout(onStageComplete, 700);
     }
   }, [currentSolved])
 

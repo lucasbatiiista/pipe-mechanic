@@ -37,22 +37,22 @@ export default function Tile({
         case '-':
           return null;
         case 'S':
-          tileSource = "/src/assets/images/start-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/start-tile-active.svg";
           break;
         case 'E':
-          tileSource = "/src/assets/images/end-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/end-tile-active.svg";
           break;
         case 'X':
-          tileSource = "/src/assets/images/x-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/x-tile-active.svg";
           break;
         case 'L':
-          tileSource = "/src/assets/images/l-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/l-tile-active.svg";
           break;
         case 'I':
-          tileSource = "/src/assets/images/i-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/i-tile-active.svg";
           break;
         case 'T':
-          tileSource = "/src/assets/images/t-tile-active.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/t-tile-active.svg";
           break;
       }
     }
@@ -61,22 +61,22 @@ export default function Tile({
         case '-':
           return null;
         case 'S':
-          tileSource = "/src/assets/images/start-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/start-tile.svg";
           break;
         case 'E':
-          tileSource = "/src/assets/images/end-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/end-tile.svg";
           break;
         case 'X':
-          tileSource = "/src/assets/images/x-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/x-tile.svg";
           break;
         case 'L':
-          tileSource = "/src/assets/images/l-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/l-tile.svg";
           break;
         case 'I':
-          tileSource = "/src/assets/images/i-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/i-tile.svg";
           break;
         case 'T':
-          tileSource = "/src/assets/images/t-tile.svg";
+          tileSource = "/src/assets/images/pipe-mechanic/t-tile.svg";
           break;
       }
     }

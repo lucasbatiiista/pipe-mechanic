@@ -4,7 +4,7 @@ import React from 'react';
 import './tile-map.less';
 
 // COMPONENTS
-import Tile from './../../components/Tile';
+import Tile from './Tile';
 
 export default function TileMap({
   type,
