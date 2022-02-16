@@ -15,8 +15,10 @@ import TileMap from '../TileMap';
 export default function GameUI({
   startTime,
   addTimeOnComplete,
+  sizesAtDifficulties,
   normalAtStage,
-  hardAtStage
+  hardAtStage,
+  endAtStage
 }) {
 
   // GENERAL
@@ -25,7 +27,7 @@ export default function GameUI({
   const timer = useRef(new TimerClock(startTime.min, startTime.sec)).current;
 
   // STATES
-  const [game, setGame] = useState(new Game(3, 2));
+  const [game, setGame] = useState(new Game(sizesAtDifficulties.easy[0], sizesAtDifficulties.easy[1]));
   const [turns, setTurns] = useState(0);
   const [stage, setStage] = useState(1);
   const [type, setType] = useState('game-type-easy');
@@ -37,7 +39,7 @@ export default function GameUI({
   // FUNCTIONS
   function resetGame() {
     timer.resetTime();
-    setGame(new Game(3, 2));
+    setGame(new Game(sizesAtDifficulties.easy[0], sizesAtDifficulties.easy[1]));
     setTurns(0);
     setStage(1);
     setType('game-type-easy');
@@ -69,19 +71,19 @@ export default function GameUI({
 
     // HARD
     if (stage + 1 >= hardAtStage) {
-      nextGame = new Game(13, 7);
+      nextGame = new Game(sizesAtDifficulties.hard[0], sizesAtDifficulties.hard[1]);
       type = 'game-type-hard';
       addTime = addTimeOnComplete.hard;
     }
     // NORMAL
     else if (stage + 1 >= normalAtStage) {
-      nextGame = new Game(9, 5);
+      nextGame = new Game(sizesAtDifficulties.normal[0], sizesAtDifficulties.normal[1]);
       type = 'game-type-normal';
       addTime = addTimeOnComplete.normal;
     }
     // EASY
     else {
-      nextGame = new Game(3, 2);
+      nextGame = new Game(sizesAtDifficulties.easy[0], sizesAtDifficulties.easy[1]);
       type = 'game-type-easy';
       addTime = addTimeOnComplete.easy;
     }
