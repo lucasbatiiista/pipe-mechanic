@@ -9,6 +9,7 @@ import "./game-ui.less";
 
 // COMPONENTS
 import GameOver from '../GameOver';
+import GameCompleted from '../GameCompleted';
 import HUD from '../HUD';
 import TileMap from '../TileMap';
 
@@ -16,6 +17,7 @@ export default function GameUI({
   startTime,
   addTimeOnComplete,
   sizesAtDifficulties,
+  rewardsAtDifficulties,
   normalAtStage,
   hardAtStage,
   endAtStage
@@ -25,6 +27,7 @@ export default function GameUI({
 
   // REFS
   const timer = useRef(new TimerClock(startTime.min, startTime.sec)).current;
+  let onTimerTickInterval = useRef(null);
 
   // STATES
   const [game, setGame] = useState(new Game(sizesAtDifficulties.easy[0], sizesAtDifficulties.easy[1]));
@@ -33,8 +36,11 @@ export default function GameUI({
   const [type, setType] = useState('game-type-easy');
   const [displayTime, setDisplayTime] = useState(timer.getFormattedTime());
   const [gameOver, setGameOver] = useState(false);
+  const [gameCompleted, setGameCompleted] = useState(false);
   const [currentSolved, setCurrentSolved] = useState(false)
   const [earnedSeconds, setEarnedSeconds] = useState(-1);
+  const [earnedReward, setEarnedReward] = useState(null);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   // FUNCTIONS
   function resetGame() {
@@ -44,6 +50,8 @@ export default function GameUI({
     setStage(1);
     setType('game-type-easy');
     setGameOver(false);
+    setGameCompleted(false);
+    setEarnedReward(null);
     setDisplayTime(timer.getFormattedTime());
     setCurrentSolved(false);
     setEarnedSeconds(-1);
@@ -61,10 +69,51 @@ export default function GameUI({
   }
 
   function onLose() {
+    let currentStage = stage > 1 ? stage - 1 : stage;
+    giveAward(currentStage);
     setGameOver(true);
   }
 
+  function giveAward(stage) {
+    function matchInterval(awardType) {
+      const isStageInterval = rewardsAtDifficulties[awardType].length > 1;
+      if (isStageInterval) {
+        return stage >= rewardsAtDifficulties[awardType][0] && stage <= rewardsAtDifficulties[awardType][1]
+      } else {
+        return rewardsAtDifficulties[awardType][0] === stage
+      }
+    }
+
+    if (matchInterval('bronze')) {
+      setEarnedReward({
+        title: 'Medalha de Bronze',
+        points: 10
+      })
+    }
+
+    if (matchInterval('silver')) {
+      setEarnedReward({
+        title: 'Medalha de Prata',
+        points: 50
+      })
+    }
+
+    if (matchInterval('gold')) {
+      setEarnedReward({
+        title: 'Medalha de Ouro',
+        points: 100
+      })
+    }
+  }
+
   function onStageComplete() {
+    if (stage === endAtStage) {
+      stopTimer();
+      giveAward(stage);
+      setGameCompleted(true);
+      return;
+    }
+
     let nextGame;
     let type;
     let addTime;
@@ -104,15 +153,42 @@ export default function GameUI({
     setDisplayTime(timer.getFormattedTime());
   }
 
+  function startTimer() {
+    setIsTimerRunning(true);
+    onTimerTickInterval.current = setInterval(
+      () => onTimerTick(),
+      1000
+    )
+  }
+
+  function stopTimer() {
+    setIsTimerRunning(false);
+    clearInterval(onTimerTickInterval.current);
+  }
+
   // USE EFFECTS
   useEffect(() => {
-    if (displayTime === '0:00')
+    startTimer();
+    return () => stopTimer();
+  }, [])
+
+  useEffect(() => {
+    if (displayTime === '0:00') {
+      stopTimer();
       onLose();
+    }
 
-    if (currentSolved)
-      onStageComplete();
+    if (displayTime !== '0:00' && !isTimerRunning)
+      startTimer();
 
-  }, [displayTime, currentSolved])
+  }, [displayTime])
+
+  useEffect(() => {
+    if (currentSolved) {
+      stopTimer();
+      setTimeout(onStageComplete, 800);
+    }
+  }, [currentSolved])
 
   useEffect(() => {
     if (earnedSeconds >= 0)
@@ -121,9 +197,15 @@ export default function GameUI({
 
   return (
     <div className='game-ui'>
+      <GameCompleted
+        earnedReward={earnedReward}
+        gameCompleted={gameCompleted}
+        resetGame={resetGame}
+      />
       <GameOver
         stage={stage}
         gameOver={gameOver}
+        earnedReward={earnedReward}
         resetGame={resetGame}
       />
       <HUD
@@ -131,7 +213,6 @@ export default function GameUI({
         stage={stage}
         displayTime={displayTime}
         earnedSeconds={earnedSeconds}
-        onTimerTick={onTimerTick}
       />
       <TileMap
         type={type}

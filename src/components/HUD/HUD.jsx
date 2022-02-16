@@ -12,8 +12,7 @@ export default function HUD({
   turns,
   stage,
   displayTime,
-  earnedSeconds,
-  onTimerTick
+  earnedSeconds
 }) {
 
   return (
@@ -22,7 +21,6 @@ export default function HUD({
         <TurnCounter turns={turns} />
         <Timer
           displayTime={displayTime}
-          onTimerTick={onTimerTick}
           earnedSeconds={earnedSeconds}
         />
         <StageCounter stage={stage} />
