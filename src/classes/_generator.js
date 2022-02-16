@@ -3,14 +3,15 @@ import Random from './_random';
 
 export default class Generator {
   constructor(width, height) {
-    if (width < 4 || height < 3) {
+    if (width < 3 || height < 2) {
       throw Error(`Invalid values for width = ${width} and height = ${height}`);
     }
-    if ((height % 2) !== 1) {
-      throw Error(`Height = ${height} must be odd number!`);
+    if ((width % 2) !== 1) {
+      throw Error(`width = ${width} must be odd number!`);
     }
+
     this.width = width;
-    this.height = height;
+    this.height = height + 2;
     this.probabilities = {
       // Probability for X-Tiles
       x: 0.05,
@@ -18,10 +19,10 @@ export default class Generator {
       t: 0.1,
       // Probability for L-Tiles & I-Tiles
       l_i: 0.85,
-      // Probability to go right
-      right: 0.4,
-      // Probability to go right after going right
-      rightAfterRight: 0.2
+      // Probability to go down
+      down: 0.4,
+      // Probability to go down after going down
+      downAfterDown: 0.2
     };
   }
 
@@ -50,85 +51,98 @@ export default class Generator {
         tilemap[y].push(null);
       }
     }
-    // Generate first and last column
-    const heightCenter = (this.height - 1) / 2;
-    const lastColumn = this.width - 1;
 
-    // Add '-' tiles on first and last column
-    for (let i = 0; i < this.height; i++) {
-      tilemap[i][0] = new TileData('-', 0);
-      tilemap[i][lastColumn] = new TileData('-', 0);
+    // Generate last row and column
+    const lastRowIndex = this.height - 1;
+    const lastColumnIndex = this.width - 1;
+
+    // Add '-' tiles on first and last row
+    for (let i = 0; i < this.width; i++) {
+      tilemap[0][i] = new TileData('-', 0);
+      tilemap[lastRowIndex][i] = new TileData('-', 0);
     }
 
+    // ********** OS TILES SAO ACESSADOS NAS CORDENADAS Y (index da linha), X (index da coluna) *************
+
     // Add Start- and End-Pos
-    tilemap[heightCenter][0] = new TileData('S', 0);
-    tilemap[heightCenter][lastColumn] = new TileData('E', 2);
-    this.startPos = [0, heightCenter];
-    this.endPos = [lastColumn, heightCenter];
+    tilemap[0][0] = new TileData('S', 1);
+    tilemap[lastRowIndex][lastColumnIndex] = new TileData('E', 3);
+
+    this.startPos = [0, 0]; // [0, 0]
+    this.endPos = [lastRowIndex, lastColumnIndex]; // [3, 2]
 
     return tilemap;
   }
 
   createRandomSolution(tilemap) {
     if (this.endPos[0] < this.startPos[0]) {
-      throw Error(`Start-Pos(${this.startPos}) should be on the left of End-Pos(${this.endPos})`);
+      throw Error(`Start-Pos(${this.startPos}) should be on the top of End-Pos(${this.endPos})`);
     }
+
     // The position where we want to find a good tile for (start next from startPos)
-    let currentPos = [this.startPos[0] + 1, this.startPos[1]];
+    let currentPos = [this.startPos[0] + 1, this.startPos[1]]; // [1, 0]
+
     // The direction we are coming from
-    let currentDirection = 'right';
+    let currentDirection = 'down';
+
     // The direction we are trying to go (randomized)
     let nextDirection = this.randomDirection(currentDirection);
-    // Loop through until we want to figure out the tile before the end pos in the last column
+
+    // Loop through until we want to figure out the tile before the end pos in the last row
     while (this.endPos[0] - currentPos[0] !== 1) {
-      // Check for out of bounds -> just go right
-      if (nextDirection === 'up' && currentPos[1] - 1 < 0) {
-        nextDirection = 'right';
+      // Check for out of bounds -> just go down
+      if (nextDirection === 'left' && currentPos[1] - 1 < 0) {
+        nextDirection = 'down';
       }
-      else if (nextDirection === 'down' && currentPos[1] + 1 >= this.height) {
-        nextDirection = 'right';
+      else if (nextDirection === 'right' && currentPos[1] + 1 >= this.width) {
+        nextDirection = 'down';
       }
+
       // Set tile
-      tilemap[currentPos[1]][currentPos[0]] =
+      tilemap[currentPos[0]][currentPos[1]] =
         (currentDirection === nextDirection) ? this.randomStraightTile() : this.randomAngularTile();
 
       // Prepare next step
       currentDirection = nextDirection;
       nextDirection = this.randomDirection(currentDirection);
+
       // Goto new position and determine next pos
       if (currentDirection === 'right') {
-        currentPos[0]++;
+        currentPos[1]++;
       }
-      else if (currentDirection === 'up') {
+      else if (currentDirection === 'left') {
         currentPos[1]--;
       }
       else if (currentDirection === 'down') {
-        currentPos[1]++;
+        currentPos[0]++;
       }
       else {
         throw new Error(`CurrentDirection = ${currentDirection} is not a valid value for direction`);
       }
     }
-    // Find way to end pos in last column
+
+    // Find way to end pos in last row
 
     // Go straight if no turning necessary
     if (currentPos[1] === this.endPos[1]) {
-      tilemap[currentPos[1]][currentPos[0]] = this.randomStraightTile();
+      tilemap[currentPos[0]][currentPos[1]] = this.randomStraightTile();
     }
     else {
-      // First tile must be angular as we go up or down
-      tilemap[currentPos[1]][currentPos[0]] = this.randomAngularTile();
-      // Go up / down until we are on the same level as endPos
+      // First tile must be angular as we go left or right
+      tilemap[currentPos[0]][currentPos[1]] = this.randomAngularTile();
+      // Go left / right until we are on the same column as endPos
       while (this.endPos[1] !== currentPos[1]) {
         if (this.endPos[1] > currentPos[1]) {
           currentPos[1]++;
+        } else {
+          currentPos[1]--;
         }
-        else { currentPos[1]--; }
-        tilemap[currentPos[1]][currentPos[0]] = this.randomStraightTile();
+        tilemap[currentPos[0]][currentPos[1]] = this.randomStraightTile();
       }
-      // Last tile is angular as we come from above / below
-      tilemap[this.endPos[1]][this.endPos[0] - 1] = this.randomAngularTile();
+      // Last tile is angular as we come from left / right
+      tilemap[this.endPos[0] - 1][this.endPos[1]] = this.randomAngularTile();
     }
+
     return tilemap;
   }
 
@@ -165,41 +179,41 @@ export default class Generator {
     }
   }
 
-  getProbabilityRightForDirection(direction) {
-    return direction === 'right' ? this.probabilities.rightAfterRight : this.probabilities.right;
+  getProbabilityDownForDirection(direction) {
+    return direction === 'down' ? this.probabilities.downAfterDown : this.probabilities.down;
   }
 
-  getProbabilityUpForDirection(direction) {
+  getProbabilityRightForDirection(direction) {
     switch (direction) {
-      case 'right':
-        return (1 - this.probabilities.rightAfterRight) / 2;
-      case 'up':
-        return 1 - this.probabilities.right;
       case 'down':
+        return (1 - this.probabilities.downAfterDown) / 2;
+      case 'right':
+        return 1 - this.probabilities.down;
+      case 'left':
         return 0;
     }
     throw Error(`Invalid direction given (direction = ${direction})`);
   }
 
-  getProbabilityDownForDirection(direction) {
+  getProbabilityLeftForDirection(direction) {
     switch (direction) {
-      case 'right': return (1 - this.probabilities.rightAfterRight) / 2;
-      case 'up': return 0;
-      case 'down': return 1 - this.probabilities.right;
+      case 'down': return (1 - this.probabilities.downAfterDown) / 2;
+      case 'right': return 0;
+      case 'left': return 1 - this.probabilities.down;
     }
     throw Error(`Invalid direction given (direction = ${direction})`);
   }
 
   randomDirection(currentDirection) {
     let random = Random.randomInt(
+      this.getProbabilityDownForDirection(currentDirection),
       this.getProbabilityRightForDirection(currentDirection),
-      this.getProbabilityUpForDirection(currentDirection),
-      this.getProbabilityDownForDirection(currentDirection)
+      this.getProbabilityLeftForDirection(currentDirection)
     );
     switch (random) {
-      case 0: return 'right';
-      case 1: return 'up';
-      case 2: return 'down';
+      case 0: return 'down';
+      case 1: return 'right';
+      case 2: return 'left';
     }
   }
 

@@ -25,7 +25,7 @@ export default function GameUI({
   const timer = useRef(new TimerClock(startTime.min, startTime.sec)).current;
 
   // STATES
-  const [game, setGame] = useState(new Game(6, 3));
+  const [game, setGame] = useState(new Game(3, 2));
   const [turns, setTurns] = useState(0);
   const [stage, setStage] = useState(1);
   const [type, setType] = useState('game-type-easy');
@@ -37,7 +37,7 @@ export default function GameUI({
   // FUNCTIONS
   function resetGame() {
     timer.resetTime();
-    setGame(new Game(6, 3));
+    setGame(new Game(3, 2));
     setTurns(0);
     setStage(1);
     setType('game-type-easy');
@@ -69,7 +69,7 @@ export default function GameUI({
 
     // HARD
     if (stage + 1 >= hardAtStage) {
-      nextGame = new Game(12, 7);
+      nextGame = new Game(13, 7);
       type = 'game-type-hard';
       addTime = addTimeOnComplete.hard;
     }
@@ -81,7 +81,7 @@ export default function GameUI({
     }
     // EASY
     else {
-      nextGame = new Game(6, 3);
+      nextGame = new Game(3, 2);
       type = 'game-type-easy';
       addTime = addTimeOnComplete.easy;
     }
