@@ -3,6 +3,20 @@ import React from 'react';
 // STYLES
 import './tile.less';
 
+// ASSETS
+import startTileActive from './../../../../assets/images/pipe-mechanic/start-tile-active.svg';
+import startTile from './../../../../assets/images/pipe-mechanic/start-tile.svg';
+import endTileActive from './../../../../assets/images/pipe-mechanic/end-tile-active.svg';
+import endTile from './../../../../assets/images/pipe-mechanic/end-tile.svg';
+import xTileActive from './../../../../assets/images/pipe-mechanic/x-tile-active.svg';
+import xTile from './../../../../assets/images/pipe-mechanic/x-tile.svg';
+import lTileActive from './../../../../assets/images/pipe-mechanic/l-tile-active.svg';
+import lTile from './../../../../assets/images/pipe-mechanic/l-tile.svg';
+import iTileActive from './../../../../assets/images/pipe-mechanic/i-tile-active.svg';
+import iTile from './../../../../assets/images/pipe-mechanic/i-tile.svg';
+import tTileActive from './../../../../assets/images/pipe-mechanic/t-tile-active.svg';
+import tTile from './../../../../assets/images/pipe-mechanic/t-tile.svg';
+
 export default function Tile({
   data,
   x,
@@ -37,22 +51,22 @@ export default function Tile({
         case '-':
           return null;
         case 'S':
-          tileSource = "/src/assets/images/pipe-mechanic/start-tile-active.svg";
+          tileSource = startTileActive;
           break;
         case 'E':
-          tileSource = "/src/assets/images/pipe-mechanic/end-tile-active.svg";
+          tileSource = endTileActive;
           break;
         case 'X':
-          tileSource = "/src/assets/images/pipe-mechanic/x-tile-active.svg";
+          tileSource = xTileActive;
           break;
         case 'L':
-          tileSource = "/src/assets/images/pipe-mechanic/l-tile-active.svg";
+          tileSource = lTileActive;
           break;
         case 'I':
-          tileSource = "/src/assets/images/pipe-mechanic/i-tile-active.svg";
+          tileSource = iTileActive;
           break;
         case 'T':
-          tileSource = "/src/assets/images/pipe-mechanic/t-tile-active.svg";
+          tileSource = tTileActive;
           break;
       }
     }
@@ -61,22 +75,22 @@ export default function Tile({
         case '-':
           return null;
         case 'S':
-          tileSource = "/src/assets/images/pipe-mechanic/start-tile.svg";
+          tileSource = startTile;
           break;
         case 'E':
-          tileSource = "/src/assets/images/pipe-mechanic/end-tile.svg";
+          tileSource = endTile;
           break;
         case 'X':
-          tileSource = "/src/assets/images/pipe-mechanic/x-tile.svg";
+          tileSource = xTile;
           break;
         case 'L':
-          tileSource = "/src/assets/images/pipe-mechanic/l-tile.svg";
+          tileSource = lTile;
           break;
         case 'I':
-          tileSource = "/src/assets/images/pipe-mechanic/i-tile.svg";
+          tileSource = iTile;
           break;
         case 'T':
-          tileSource = "/src/assets/images/pipe-mechanic/t-tile.svg";
+          tileSource = tTile;
           break;
       }
     }
